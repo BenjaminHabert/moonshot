@@ -9,4 +9,4 @@ var e,t=arguments[3];!function(r){"object"==typeof exports&&"undefined"!=typeof 
 },{}],"Focm":[function(require,module,exports) {
 "use strict";var e=t(require("p5")),a=require("./ship.js"),r=require("./planets.js");function t(e){return e&&e.__esModule?e:{default:e}}var n=function(e){var t,n;e.setup=function(){e.createCanvas(1e3,700),e.frameRate(30),n=new r.Planets(e),t=new a.Ship(e,n)},e.draw=function(){t.update(),e.background(100),n.draw(),t.draw(),e.fill(200),e.text(e.frameRate().toFixed(2),10,10)}};new e.default(n);
 },{"p5":"LjmI","./ship.js":"iqpj","./planets.js":"r9Vp"}]},{},["Focm"], null)
-//# sourceMappingURL=/src.2ea5caa6.js.map
+//# sourceMappingURL=src.2ea5caa6.js.map
