@@ -26,10 +26,10 @@ export class Planets {
     constructor(p) {
         this.p = p;
 
-        this.data = data;
-        this.planets = data.otherPlanets;
-        this.planets.push(data.earth)
-        this.planets.push(data.moon)
+        this.data = JSON.parse(JSON.stringify(data));
+        this.planets = this.data.otherPlanets;
+        this.planets.push(this.data.earth)
+        this.planets.push(this.data.moon)
     }
 
 
@@ -55,7 +55,6 @@ export class Planets {
             angle: earth.launchAngle,
             localGravity: planetGravity
         }
-        console.log(launchpad)
         return launchpad
     }
 

@@ -11,20 +11,36 @@ const s = (p) => {
     p.setup = function () {
         p.createCanvas(1000, 700);
         p.frameRate(30);
-        planets = new Planets(p);
-        ship = new Ship(p, planets);
+        p.restart();
     };
 
     p.draw = function () {
-        ship.update();
+        p.update();
 
         p.background(100);
+        p.fill(200);
+        p.text(p.frameRate().toFixed(2), 10, 10)
+
+
         p.translate(p.width / 2 - ship.pos.x, p.height / 2 - ship.pos.y)
         planets.draw();
         ship.draw();
 
-        p.fill(200);
-        p.text(p.frameRate().toFixed(2), 10, 10)
+
+    };
+
+    p.update = function () {
+        const isCollision = ship.update();
+
+        if (isCollision) {
+            p.restart();
+        }
+    }
+
+
+    p.restart = function () {
+        planets = new Planets(p);
+        ship = new Ship(p, planets);
     };
 
 };

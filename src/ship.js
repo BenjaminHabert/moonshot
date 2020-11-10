@@ -23,9 +23,12 @@ export class Ship {
 
     update() {
         this.registerCommands();
+        let isCollision = false
         if (this.hasLiftOff) {
-            this.move();
+            isCollision = this.move();
         }
+
+        return isCollision
     }
 
     registerCommands() {
@@ -45,6 +48,8 @@ export class Ship {
         acceleration.add(gravity);
         this.velocity.add(acceleration);
         this.pos.add(this.velocity);
+
+        return isCollision;
     }
 
     computeSelfAcceleration() {
