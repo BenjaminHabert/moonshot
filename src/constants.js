@@ -13,7 +13,7 @@ export const PlanetsConstants = {
 }
 
 
-export const GameConstants = {
+export const CanvasConstants = {
     width: 1000,
     height: 700,
     frameRate: 30,

@@ -1,47 +1,23 @@
 import p5 from 'p5'
 
-import { GameConstants } from "./constants.js"
-import { Ship } from './ship.js'
-import { Planets } from './planets.js'
+import { CanvasConstants } from "./constants.js"
+
+import { Game } from "./game.js"
 
 const s = (p) => {
 
-    let ship;
-    let planets
+
+    let game;
 
     p.setup = function () {
-        p.createCanvas(GameConstants.width, GameConstants.height);
-        p.frameRate(GameConstants.frameRate);
-        p.restart();
+        p.createCanvas(CanvasConstants.width, CanvasConstants.height);
+        p.frameRate(CanvasConstants.frameRate);
+        game = new Game(p);
     };
 
     p.draw = function () {
-        p.update();
-
-        p.background(100);
-        p.fill(200);
-        p.text(p.frameRate().toFixed(2), 10, 10)
-
-
-        p.translate(p.width / 2 - ship.pos.x, p.height / 2 - ship.pos.y)
-        planets.draw();
-        ship.draw();
-
-
-    };
-
-    p.update = function () {
-        const isCollision = ship.update();
-
-        if (isCollision) {
-            p.restart();
-        }
-    }
-
-
-    p.restart = function () {
-        planets = new Planets(p);
-        ship = new Ship(p, planets);
+        game.update();
+        game.draw();
     };
 
 };
