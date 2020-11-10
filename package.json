@@ -22,7 +22,8 @@
     "staticPath": [
       {
         "staticPath": "src/levels",
-        "staticOutDir": "levels/"
+        "staticOutDir": "levels/",
+        "watcherGlob": "**"
       }
     ]
   }
