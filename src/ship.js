@@ -1,3 +1,4 @@
+import { ShipConstants } from './constants';
 
 export class Ship {
     hasLiftOff = false;
@@ -17,7 +18,7 @@ export class Ship {
         const start = this.planets.getLaunchpad();
         this.pos = start.pos;
         this.angle = start.angle;
-        this.boosterStrength = start.localGravity.mag() * 1.01;
+        this.boosterStrength = start.localGravity.mag() * (1 + ShipConstants.boosterForce);
 
     }
 
@@ -33,10 +34,10 @@ export class Ship {
 
     registerCommands() {
         if (this.p.keyIsDown(this.p.LEFT_ARROW)) {
-            this.angle -= 0.1;
+            this.angle -= ShipConstants.angleChange;
         }
         if (this.p.keyIsDown(this.p.RIGHT_ARROW)) {
-            this.angle += 0.1;
+            this.angle += ShipConstants.angleChange;
         }
         this.engineOn = this.p.keyIsDown(this.p.UP_ARROW);
 
@@ -62,7 +63,7 @@ export class Ship {
 
         if (this.engineOn) {
             accEngine.add(direction);
-            accEngine.mult(0.01);
+            accEngine.mult(ShipConstants.engineForce);
         }
         if (this.boosterOn) {
             accBooster.add(direction);
@@ -80,7 +81,7 @@ export class Ship {
         let positions = [];
         let pos = this.pos.copy();
         let velocity = this.velocity.copy();
-        for (let i = 0; i < 500; i++) {
+        for (let i = 0; i < ShipConstants.numPredicted; i++) {
             const { gravity, isCollision } = this.planets.computeGravityAcceleration(pos);
             velocity.add(gravity);
             pos.add(velocity);
@@ -133,7 +134,7 @@ export class Ship {
     }
 
     keyPressed() {
-        if (this.p.keyCode === 32) {
+        if (this.p.keyCode === ShipConstants.keyCodeBooster) {
             console.log('SPACE')
             if (this.boosterOn === false) {
                 if (this.boosterJettisoned === false) {

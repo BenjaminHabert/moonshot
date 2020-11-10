@@ -22,6 +22,9 @@ const data = {
 
 
 
+import { PlanetsConstants } from "./constants"
+
+
 export class Planets {
     constructor(p) {
         this.p = p;
@@ -45,7 +48,7 @@ export class Planets {
     getLaunchpad() {
         const earth = this.data.earth;
         const pos = this.p.createVector(earth.center.x, earth.center.y);
-        const vec = this.p.createVector(earth.radius + 2, 0);
+        const vec = this.p.createVector(earth.radius + PlanetsConstants.launchpadDelta, 0);
         vec.rotate(earth.launchAngle);
         pos.add(vec);
 
@@ -77,7 +80,7 @@ export class Planets {
         const toPlanet = this.p.createVector(planet.center.x, planet.center.y);
         toPlanet.sub(pos);
         const distSq = toPlanet.magSq();
-        const gravityMag = 1000 * planet.mass / this.p.max(distSq, radiusSq);
+        const gravityMag = PlanetsConstants.gravity * planet.mass / this.p.max(distSq, radiusSq);
 
         const planetGravity = toPlanet.copy()
         planetGravity.setMag(gravityMag)

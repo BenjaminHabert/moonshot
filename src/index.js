@@ -1,5 +1,6 @@
 import p5 from 'p5'
 
+import { GameConstants } from "./constants.js"
 import { Ship } from './ship.js'
 import { Planets } from './planets.js'
 
@@ -9,8 +10,8 @@ const s = (p) => {
     let planets
 
     p.setup = function () {
-        p.createCanvas(1000, 700);
-        p.frameRate(30);
+        p.createCanvas(GameConstants.width, GameConstants.height);
+        p.frameRate(GameConstants.frameRate);
         p.restart();
     };
 
