@@ -41,7 +41,8 @@ export class Ship {
 
     move() {
         let acceleration = this.computeSelfAcceleration();
-        acceleration.add(this.computeGravityAcceleration(this.pos));
+        const { gravity, isCollision } = this.planets.computeGravityAcceleration(this.pos)
+        acceleration.add(gravity);
         this.velocity.add(acceleration);
         this.pos.add(this.velocity);
     }
@@ -69,23 +70,19 @@ export class Ship {
         return acceleration
     }
 
-    computeGravityAcceleration(pos) {
-        return this.planets.computeGravityAcceleration(pos);
-    }
-
 
     computeNextPositions() {
         let positions = [];
         let pos = this.pos.copy();
         let velocity = this.velocity.copy();
-        let delta = 1;
         for (let i = 0; i < 500; i++) {
-            const acceleration = this.computeGravityAcceleration(pos);
-            acceleration.mult(delta);
-            velocity.add(acceleration);
-            pos.add(velocity.copy().mult(delta));
+            const { gravity, isCollision } = this.planets.computeGravityAcceleration(pos);
+            velocity.add(gravity);
+            pos.add(velocity);
             positions.push(pos.copy());
-
+            if (isCollision) {
+                break;
+            }
         }
 
         return positions

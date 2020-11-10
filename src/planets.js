@@ -48,10 +48,12 @@ export class Planets {
         const vec = this.p.createVector(earth.radius + 2, 0);
         vec.rotate(earth.launchAngle);
         pos.add(vec);
+
+        const { planetGravity } = this.computeGravityForPlanet(pos, earth);
         const launchpad = {
             pos: pos.copy(),
             angle: earth.launchAngle,
-            localGravity: this.computeGravityForPlanet(pos, earth)
+            localGravity: planetGravity
         }
         console.log(launchpad)
         return launchpad
@@ -59,22 +61,31 @@ export class Planets {
 
 
     computeGravityAcceleration(pos) {
-        let acceleration = this.p.createVector(0, 0);
+        let gravity = this.p.createVector(0, 0);
+        let isCollision = false;
         for (const planet of this.planets) {
-            const gravity = this.computeGravityForPlanet(pos, planet)
-            acceleration.add(gravity)
+            const { planetGravity, collides } = this.computeGravityForPlanet(pos, planet)
+            isCollision = isCollision || collides;
+            gravity.add(planetGravity)
         }
 
-        return acceleration;
+        return { gravity, isCollision };
     }
 
     computeGravityForPlanet(pos, planet) {
-        const gravity = this.p.createVector(planet.center.x, planet.center.y);
-        gravity.sub(pos);
-        const gravityMag = 1000 * planet.mass / this.p.max(gravity.magSq(), planet.radius * planet.radius);
-        gravity.setMag(gravityMag)
+        const radiusSq = planet.radius * planet.radius;
 
-        return gravity
+        const toPlanet = this.p.createVector(planet.center.x, planet.center.y);
+        toPlanet.sub(pos);
+        const distSq = toPlanet.magSq();
+        const gravityMag = 1000 * planet.mass / this.p.max(distSq, radiusSq);
+
+        const planetGravity = toPlanet.copy()
+        planetGravity.setMag(gravityMag)
+
+        const collides = radiusSq > distSq;
+
+        return { planetGravity, collides }
     }
 
 }

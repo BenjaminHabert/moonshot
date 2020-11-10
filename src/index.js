@@ -19,6 +19,7 @@ const s = (p) => {
         ship.update();
 
         p.background(100);
+        p.translate(p.width / 2 - ship.pos.x, p.height / 2 - ship.pos.y)
         planets.draw();
         ship.draw();
 
