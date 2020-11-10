@@ -1,35 +1,11 @@
-const data = {
-    earth: {
-        radius: 150,
-        mass: 1,
-        center: { x: 100, y: 100 },
-        launchAngle: 0.2
-    },
-    moon: {
-        radius: 10,
-        mass: 0.1,
-        center: { x: 800, y: 600 }
-    },
-    otherPlanets: [
-        {
-            radius: 20,
-            mass: 0.2,
-            center: { x: 500, y: 400 }
-        }
-    ]
-}
-
-
-
-
 import { PlanetsConstants } from "./constants"
 
 
 export class Planets {
-    constructor(p) {
+    constructor(p, data) {
         this.p = p;
 
-        this.data = JSON.parse(JSON.stringify(data));
+        this.data = data;
         this.planets = this.data.otherPlanets;
         this.planets.push(this.data.earth)
         this.planets.push(this.data.moon)
