@@ -43,13 +43,18 @@ export class Ship {
 
     }
 
+    reachedTheMoon() {
+        return this.planets.reachedTheMoon(this.pos);
+    }
+
     move() {
         let acceleration = this.computeSelfAcceleration();
-        const { gravity, isCollision } = this.planets.computeGravityAcceleration(this.pos)
+        const { gravity } = this.planets.computeGravityAcceleration(this.pos)
         acceleration.add(gravity);
         this.velocity.add(acceleration);
         this.pos.add(this.velocity);
 
+        const { isCollision } = this.planets.computeGravityAcceleration(this.pos)
         return isCollision;
     }
 
@@ -135,7 +140,6 @@ export class Ship {
 
     keyPressed() {
         if (this.p.keyCode === ShipConstants.keyCodeBooster) {
-            console.log('SPACE')
             if (this.boosterOn === false) {
                 if (this.boosterJettisoned === false) {
                     this.boosterOn = true;

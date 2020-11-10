@@ -2,18 +2,37 @@ import axios from "axios"
 
 import { Ship } from './ship.js'
 import { Planets } from './planets.js'
+import { GameConstants } from "./constants";
 
 export class Game {
 
     constructor(p) {
         this.p = p;
+        this.nextLevel();
+    }
+
+
+    nextLevel() {
+        if (!this.currentLevel) {
+            this.currentLevel = 1;
+        }
+        else {
+            this.currentLevel += 1;
+
+            if (this.currentLevel > GameConstants.maxLevel) {
+                this.won = true;
+            }
+        }
         this.restart();
     }
 
 
     restart() {
         this.ready = false;
-        axios.get('/levels/level_01.json')
+        if (this.won === true) {
+            return;
+        }
+        axios.get(this.getLevelUri(this.currentLevel))
             .then(response => {
                 this.planets = new Planets(this.p, response.data);
                 this.ship = new Ship(this.p, this.planets);
@@ -22,20 +41,34 @@ export class Game {
     }
 
 
+    getLevelUri(level) {
+        return `/levels/level_${String(level).padStart(2, "0")}.json`
+    }
+
+
     update() {
         if (this.ready) {
             const isCollision = this.ship.update();
 
             if (isCollision) {
-                this.restart();
+                if (this.ship.reachedTheMoon()) {
+                    this.nextLevel();
+                }
+                else {
+                    this.restart();
+                }
             }
         }
     }
 
 
     draw() {
-
-
+        if (this.won) {
+            this.p.background(200, 100, 100);
+            this.p.fill(0);
+            this.p.text("WIN !", 10, 10)
+            return;
+        }
         if (!this.ready) {
             this.p.background(200);
             this.p.fill(50);
@@ -52,5 +85,6 @@ export class Game {
         this.planets.draw();
         this.ship.draw();
     }
+
 
 }

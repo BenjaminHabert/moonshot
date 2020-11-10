@@ -18,3 +18,7 @@ export const CanvasConstants = {
     height: 700,
     frameRate: 30,
 }
+
+export const GameConstants = {
+    maxLevel: 2
+}

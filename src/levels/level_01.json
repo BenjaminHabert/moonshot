@@ -1,29 +1,20 @@
 {
     "earth": {
-        "radius": 150,
-        "mass": 1,
+        "radius": 100,
+        "mass": 10,
         "center": {
-            "x": 100,
-            "y": 100
+            "x": 0,
+            "y": 0
         },
-        "launchAngle": 0.2
+        "launchAngle": -1.57079632679
     },
     "moon": {
         "radius": 10,
         "mass": 0.1,
         "center": {
-            "x": 800,
-            "y": 600
+            "x": 0,
+            "y": -300
         }
     },
-    "otherPlanets": [
-        {
-            "radius": 20,
-            "mass": 0.2,
-            "center": {
-                "x": 500,
-                "y": 400
-            }
-        }
-    ]
+    "otherPlanets": []
 }

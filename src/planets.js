@@ -66,4 +66,11 @@ export class Planets {
         return { planetGravity, collides }
     }
 
+    reachedTheMoon(pos) {
+        const toMoon = this.p.createVector(this.data.moon.center.x, this.data.moon.center.y);
+        toMoon.sub(pos);
+
+        return toMoon.mag() < this.data.moon.radius;
+    }
+
 }
