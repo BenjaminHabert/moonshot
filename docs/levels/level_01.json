@@ -1,0 +1,22 @@
+{
+    "earth": {
+        "radius": 100,
+        "mass": 10,
+        "center": {
+            "x": 0,
+            "y": 0
+        },
+        "launchAngle": -1.57079632679,
+        "color": "#3D5467"
+    },
+    "moon": {
+        "radius": 10,
+        "mass": 0.1,
+        "center": {
+            "x": 0,
+            "y": -300
+        },
+        "color": "#FFD700"
+    },
+    "otherPlanets": []
+}
