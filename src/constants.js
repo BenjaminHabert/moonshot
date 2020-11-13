@@ -20,5 +20,7 @@ export const CanvasConstants = {
 }
 
 export const GameConstants = {
-    maxLevel: 2
+    maxLevel: 2,
+    colorFar: "#101624",
+    colorClose: "#AA8E39"
 }

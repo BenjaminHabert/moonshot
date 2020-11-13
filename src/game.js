@@ -72,6 +72,23 @@ export class Game {
         }
     }
 
+    getBackgroundColor() {
+        if (!this.ready) {
+            return GameConstants.colorFar;
+        }
+        else {
+            let { earth, moon } = this.planets.data;
+            earth = this.p.createVector(earth.center.x, earth.center.y);
+            moon = this.p.createVector(moon.center.x, moon.center.y);
+            let ship = this.ship.pos;
+
+            let distEarthMoon = earth.copy().sub(moon).mag(),
+                distShipMoon = ship.copy().sub(moon).mag();
+            const ratio = this.p.constrain(distShipMoon / (distEarthMoon / 2.0), 0, 1);
+            return this.p.lerpColor(this.p.color(GameConstants.colorClose), this.p.color(GameConstants.colorFar), ratio)
+        }
+    }
+
 
     draw() {
         if (this.won) {
@@ -88,7 +105,7 @@ export class Game {
         }
 
 
-        this.p.background(100);
+        this.p.background(this.getBackgroundColor());
         this.p.fill(200);
         this.p.text(this.p.frameRate().toFixed(2), 10, 10)
 
