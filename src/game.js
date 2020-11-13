@@ -42,7 +42,7 @@ export class Game {
 
 
     getLevelUri(level) {
-        return `/levels/level_${String(level).padStart(2, "0")}.json`
+        return `levels/level_${String(level).padStart(2, "0")}.json`
     }
 
 
