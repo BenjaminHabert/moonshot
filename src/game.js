@@ -47,7 +47,11 @@ export class Game {
 
 
     update() {
+        this.registerCommands();
+
         if (this.ready) {
+
+
             const isCollision = this.ship.update();
 
             if (isCollision) {
@@ -58,6 +62,13 @@ export class Game {
                     this.restart();
                 }
             }
+        }
+    }
+
+
+    registerCommands() {
+        if (this.p.keyIsDown(this.p.ENTER)) {
+            this.restart();
         }
     }
 
