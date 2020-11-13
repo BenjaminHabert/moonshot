@@ -1,3 +1,4 @@
+import { ShipConstants } from './constants';
 
 export class Ship {
     hasLiftOff = false;
@@ -17,33 +18,44 @@ export class Ship {
         const start = this.planets.getLaunchpad();
         this.pos = start.pos;
         this.angle = start.angle;
-        this.boosterStrength = start.localGravity.mag() * 1.01;
+        this.boosterStrength = start.localGravity.mag() * (1 + ShipConstants.boosterForce);
 
     }
 
     update() {
         this.registerCommands();
+        let isCollision = false
         if (this.hasLiftOff) {
-            this.move();
+            isCollision = this.move();
         }
+
+        return isCollision
     }
 
     registerCommands() {
         if (this.p.keyIsDown(this.p.LEFT_ARROW)) {
-            this.angle -= 0.1;
+            this.angle -= ShipConstants.angleChange;
         }
         if (this.p.keyIsDown(this.p.RIGHT_ARROW)) {
-            this.angle += 0.1;
+            this.angle += ShipConstants.angleChange;
         }
         this.engineOn = this.p.keyIsDown(this.p.UP_ARROW);
 
     }
 
+    reachedTheMoon() {
+        return this.planets.reachedTheMoon(this.pos);
+    }
+
     move() {
         let acceleration = this.computeSelfAcceleration();
-        acceleration.add(this.computeGravityAcceleration(this.pos));
+        const { gravity } = this.planets.computeGravityAcceleration(this.pos)
+        acceleration.add(gravity);
         this.velocity.add(acceleration);
         this.pos.add(this.velocity);
+
+        const { isCollision } = this.planets.computeGravityAcceleration(this.pos)
+        return isCollision;
     }
 
     computeSelfAcceleration() {
@@ -56,7 +68,7 @@ export class Ship {
 
         if (this.engineOn) {
             accEngine.add(direction);
-            accEngine.mult(0.01);
+            accEngine.mult(ShipConstants.engineForce);
         }
         if (this.boosterOn) {
             accBooster.add(direction);
@@ -69,23 +81,19 @@ export class Ship {
         return acceleration
     }
 
-    computeGravityAcceleration(pos) {
-        return this.planets.computeGravityAcceleration(pos);
-    }
-
 
     computeNextPositions() {
         let positions = [];
         let pos = this.pos.copy();
         let velocity = this.velocity.copy();
-        let delta = 1;
-        for (let i = 0; i < 500; i++) {
-            const acceleration = this.computeGravityAcceleration(pos);
-            acceleration.mult(delta);
-            velocity.add(acceleration);
-            pos.add(velocity.copy().mult(delta));
+        for (let i = 0; i < ShipConstants.numPredicted; i++) {
+            const { gravity, isCollision } = this.planets.computeGravityAcceleration(pos);
+            velocity.add(gravity);
+            pos.add(velocity);
             positions.push(pos.copy());
-
+            if (isCollision) {
+                break;
+            }
         }
 
         return positions
@@ -131,8 +139,7 @@ export class Ship {
     }
 
     keyPressed() {
-        if (this.p.keyCode === 32) {
-            console.log('SPACE')
+        if (this.p.keyCode === ShipConstants.keyCodeBooster) {
             if (this.boosterOn === false) {
                 if (this.boosterJettisoned === false) {
                     this.boosterOn = true;

@@ -1,42 +1,21 @@
-const data = {
-    earth: {
-        radius: 150,
-        mass: 1,
-        center: { x: 100, y: 100 },
-        launchAngle: 0.2
-    },
-    moon: {
-        radius: 10,
-        mass: 0.1,
-        center: { x: 800, y: 600 }
-    },
-    otherPlanets: [
-        {
-            radius: 20,
-            mass: 0.2,
-            center: { x: 500, y: 400 }
-        }
-    ]
-}
-
-
+import { PlanetsConstants } from "./constants"
 
 
 export class Planets {
-    constructor(p) {
+    constructor(p, data) {
         this.p = p;
 
         this.data = data;
-        this.planets = data.otherPlanets;
-        this.planets.push(data.earth)
-        this.planets.push(data.moon)
+        this.planets = this.data.otherPlanets;
+        this.planets.push(this.data.earth)
+        this.planets.push(this.data.moon)
     }
 
 
     draw() {
         this.p.ellipseMode(this.p.CENTER);
-        this.p.fill(50, 10, 10);
         for (const planet of this.planets) {
+            this.p.fill(planet.color);
             this.p.circle(planet.center.x, planet.center.y, 2 * planet.radius)
         }
     }
@@ -45,36 +24,53 @@ export class Planets {
     getLaunchpad() {
         const earth = this.data.earth;
         const pos = this.p.createVector(earth.center.x, earth.center.y);
-        const vec = this.p.createVector(earth.radius + 2, 0);
+        const vec = this.p.createVector(earth.radius + PlanetsConstants.launchpadDelta, 0);
         vec.rotate(earth.launchAngle);
         pos.add(vec);
+
+        const { planetGravity } = this.computeGravityForPlanet(pos, earth);
         const launchpad = {
             pos: pos.copy(),
             angle: earth.launchAngle,
-            localGravity: this.computeGravityForPlanet(pos, earth)
+            localGravity: planetGravity
         }
-        console.log(launchpad)
         return launchpad
     }
 
 
     computeGravityAcceleration(pos) {
-        let acceleration = this.p.createVector(0, 0);
+        let gravity = this.p.createVector(0, 0);
+        let isCollision = false;
         for (const planet of this.planets) {
-            const gravity = this.computeGravityForPlanet(pos, planet)
-            acceleration.add(gravity)
+            const { planetGravity, collides } = this.computeGravityForPlanet(pos, planet)
+            isCollision = isCollision || collides;
+            gravity.add(planetGravity)
         }
 
-        return acceleration;
+        return { gravity, isCollision };
     }
 
     computeGravityForPlanet(pos, planet) {
-        const gravity = this.p.createVector(planet.center.x, planet.center.y);
-        gravity.sub(pos);
-        const gravityMag = 1000 * planet.mass / this.p.max(gravity.magSq(), planet.radius * planet.radius);
-        gravity.setMag(gravityMag)
+        const radiusSq = planet.radius * planet.radius;
 
-        return gravity
+        const toPlanet = this.p.createVector(planet.center.x, planet.center.y);
+        toPlanet.sub(pos);
+        const distSq = toPlanet.magSq();
+        const gravityMag = PlanetsConstants.gravity * planet.mass / this.p.max(distSq, radiusSq);
+
+        const planetGravity = toPlanet.copy()
+        planetGravity.setMag(gravityMag)
+
+        const collides = radiusSq > distSq;
+
+        return { planetGravity, collides }
+    }
+
+    reachedTheMoon(pos) {
+        const toMoon = this.p.createVector(this.data.moon.center.x, this.data.moon.center.y);
+        toMoon.sub(pos);
+
+        return toMoon.mag() < this.data.moon.radius;
     }
 
 }
