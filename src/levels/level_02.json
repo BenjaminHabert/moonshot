@@ -6,7 +6,8 @@
             "x": 100,
             "y": 100
         },
-        "launchAngle": 0.2
+        "launchAngle": 0.2,
+        "color": "#3D5467"
     },
     "moon": {
         "radius": 10,
@@ -14,7 +15,8 @@
         "center": {
             "x": 800,
             "y": 600
-        }
+        },
+        "color": "#FFD700"
     },
     "otherPlanets": [
         {
@@ -23,7 +25,8 @@
             "center": {
                 "x": 500,
                 "y": 400
-            }
+            },
+            "color": "#686963"
         }
     ]
 }

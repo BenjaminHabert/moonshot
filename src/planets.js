@@ -14,8 +14,8 @@ export class Planets {
 
     draw() {
         this.p.ellipseMode(this.p.CENTER);
-        this.p.fill(50, 10, 10);
         for (const planet of this.planets) {
+            this.p.fill(planet.color);
             this.p.circle(planet.center.x, planet.center.y, 2 * planet.radius)
         }
     }
